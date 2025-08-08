@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
+from .views import product_create_view
 
 urlpatterns = [
+    # path('', views.ProductCreateAPIView.as_view(), name='product-create'),
+    path('', product_create_view), # <- Alternative way to use the view directly
     path('<int:pk>/', views.ProductDetailAPIView.as_view(), name='product-detail'),
     # Alternative way to use the view directly:
     # path('<int:pk>/', product_detail_view, name='product-detail'), 
