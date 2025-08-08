@@ -2,7 +2,7 @@ from rest_framework import generics
 from products.models import Product
 from products.serializers import ProductSerializer
 
-class ProductCreateAPIView(generics.CreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -19,7 +19,7 @@ class ProductCreateAPIView(generics.CreateAPIView):
 # another way to define the view (instead of the class-based view above)
 # This allows for easy reference in other parts of the application, such as URL patterns.
 # It can be used in the urls.py file to create a URL pattern that maps to this
-product_create_view = ProductCreateAPIView.as_view()
+product_list_create_view = ProductListCreateAPIView.as_view()
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
@@ -30,3 +30,19 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 # This allows for easy reference in other parts of the application, such as URL patterns.
 # It can be used in the urls.py file to create a URL pattern that maps to this
 product_detail_view = ProductDetailAPIView.as_view()
+
+class ProductListAPIView(generics.ListAPIView):
+    """
+    Not used, instead we use ProductListCreateAPIView
+    """
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+product_list_view = ProductListAPIView.as_view()
+
+
+
+
+
+
+
