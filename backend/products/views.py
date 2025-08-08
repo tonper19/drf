@@ -1,6 +1,9 @@
 from rest_framework import generics
 from products.models import Product
 from products.serializers import ProductSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
@@ -40,6 +43,30 @@ class ProductListAPIView(generics.ListAPIView):
 
 product_list_view = ProductListAPIView.as_view()
 
+# Using a function-based view for demonstration purposes
+@api_view(['GET', 'POST'])
+def product_alt_view(request, pk=None, *args, **kwargs):
+    method = request.method
+    if method == "GET":
+        if pk is not None:
+            instance = get_object_or_404(Product, pk=pk)
+            data = ProductSerializer(instance, many=False).data
+            return Response(data)
+        # If no pk is provided, return a list of products
+        queryset = Product.objects.all()
+        data = ProductSerializer(queryset, many=True).data
+        return Response(data)
+        
+    if method == "POST":
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            title = serializer.validated_data.get('title', 'Default Title')
+            content = serializer.validated_data.get('content') or None
+            if content is None:
+                content = title
+            serializer.save(content=content)
+            return Response(serializer.data)
+        return Response({"invalid": "not good data"}, status=400)
 
 
 
